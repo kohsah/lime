@@ -1,7 +1,21 @@
 {
-    "schemaRegex": "xmlns=\"(http://docs.oasis-open.org/legaldocml/ns/akn/3.0/CSD\\d+)\"",
-    "formulaName": "formulaIniziale",
+	"schemaRegex": "xmlns=\"(http://docs.oasis-open.org/legaldocml/ns/akn/3.0/CSD\\d+)\"",
+	"formulaName": "formulaIniziale",
 	"docTypes": [
+		{
+			"name": "dc-doc",
+			"locales": [
+				{
+					"name": "fao"
+
+				},
+				{
+					"name": "ke"
+				}, {
+					"name": "uy"
+				}
+			]
+		},
 		{
 			"name": "bill",
 			"locales": [
@@ -141,15 +155,15 @@
 				}
 			]
 		}, {
-            "name": "judgment",
-            "locales": [
-                {
-                    "name": "it"
-                }, {
-                    "name": "ro"
-                }
-            ]
-        }
+			"name": "judgment",
+			"locales": [
+				{
+					"name": "it"
+				}, {
+					"name": "ro"
+				}
+			]
+		}
 	],
 	"transformationFiles": {
 		"languageToLIME": "AknToXhtml.xsl",

@@ -1,6 +1,7 @@
 /ext/
 /resources/ext/
 /.sencha/
+/.idea/
 /build/
 /bootstrap.js
 /bootstrap.json

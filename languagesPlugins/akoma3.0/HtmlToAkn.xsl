@@ -146,6 +146,13 @@
 		       		<xsl:apply-templates />
        			</xsl:element>
         	</xsl:when> 
+            <xsl:when test="$aknName='dc-doc'">
+                <xsl:element name="debateReport">
+                    <xsl:attribute name="name">dc-doc</xsl:attribute>
+                    <xsl:apply-templates select="@*" mode="aknPrefixAttributes" />
+                    <xsl:apply-templates />
+                </xsl:element>
+            </xsl:when>
         	<!-- All elements -->
 		    <xsl:when test="$aknName != ''">
         	    <xsl:element name="{$aknName}">
