@@ -45,7 +45,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 // the server url 
-define('SERVER_NAME', 'http://sinatra.cirsfid.unibo.it');
+define('SERVER_NAME', 'http://localhost:9006');
 
 // absolute path to AbiWord utility
 define('ABIWORD_PATH', '/usr/bin/abiword');
