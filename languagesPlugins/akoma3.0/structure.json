@@ -3,7 +3,7 @@
 	"formulaName": "formulaIniziale",
 	"docTypes": [
 		{
-			"name": "dc-doc",
+			"name": "debateReport",
 			"locales": [
 				{
 					"name": "fao"
