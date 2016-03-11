@@ -49,7 +49,7 @@ Ext.define('LIME.Locale', {
     alternateClassName : 'Locale',
 
     config: {
-        lang : 'it',
+        lang : 'en',
         defaultLang: 'en'
     },
 
