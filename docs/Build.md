@@ -7,8 +7,26 @@ If you want just to try Lime without changing the source code you can download a
 ## Sencha Cmd
 You need to install [Sencha Cmd](https://www.sencha.com/products/sencha-cmd/) which is used for the building process. We're using Sencha Cmd v5.1.3.61, it should work on newer versions but has not been tested yet.
 
+## Environment
+
+You will need to install:
+  * Build environment - on Ubunt `sudo apt-get install build-essential`
+  * Ruby - build tested with Ruby 2.1.5. You can install Ruby with [RVM on ubuntu](https://rvm.io/rvm/install)
+  * Sass - see [Installing Sass](http://sass-lang.com/install). 
+  * Compass - see [Installing Compass](http://compass-style.org/install/) 
+The following may be neccessary if there is no default language pack / locale on the Ubunut installtion (typically in headless hosted installations) : 
+  ```
+  sudo apt-get install language-pack-en
+  ```
+Add the following to `.bashrc` :  
+ ```
+  export LC_ALL="en_US.UTF-8"
+  export LANG="en_US.UTF-8"
+ ```
+
+
 ### Workspace
-We'are using a [Sencha Cmd Workspace](http://docs.sencha.com/cmd/5.x/workspaces.html) in order to build Lime you need to have a workspace too. You can download our workspace [here](http://sinatra.cirsfid.unibo.it/demo-akn/lime_ext_workspace.zip), it contains also the ExtJS 5 framework.
+We are using a [Sencha Cmd Workspace](http://docs.sencha.com/cmd/5.x/workspaces.html) in order to build Lime you need to have a workspace too. You can download our workspace [here](http://sinatra.cirsfid.unibo.it/demo-akn/lime_ext_workspace.zip), it contains also the ExtJS 5 framework.
 
 If you want to generate a new workspace check [this](http://docs.sencha.com/cmd/5.x/workspaces.html) page.
 
