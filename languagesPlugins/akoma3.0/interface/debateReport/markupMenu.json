@@ -19,7 +19,7 @@
 		"pattern": "container"
 	},
 	"authorialNote": {
-		"pattern": "inline"
+		"pattern": "popup"
 	},
 	"block": {
 		"pattern": "block"
