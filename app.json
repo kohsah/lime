@@ -22,7 +22,8 @@
         "akn-tab-visualizer",
         "akn-automatic-markup",
         "akn-toc-generator",
-        "akn-mods-marker"
+        "akn-mods-marker",
+        "fao-lime"
     ],
     "framework": "ext",
     "css": [
