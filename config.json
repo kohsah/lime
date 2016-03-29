@@ -1,7 +1,7 @@
 {
     "languages": [{"name":"akoma3.0"}],
     "fieldsDefaults": {
-        "docLocale": "en"
+        "docLocale": "fao"
     },
     "server": {
         "node": "http://localhost/ls",
