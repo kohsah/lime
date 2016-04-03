@@ -118,6 +118,7 @@ Ext.define('LIME.Config', {
                    if(data) {
                        data.name = lang;
                        this.pluginStructure[lang] = data;
+                       console.log("XXXX PLUGIN STRUCTURE ", this.pluginStructure);
                        this.generateTransformationUrls(data);
                    } else {
                        Ext.log({level: "error"}, "Language ("+lang+") structure decode error! ");
@@ -215,11 +216,22 @@ Ext.define('LIME.Config', {
     
     getDocTypesByLang: function(lang) {
         if (this.pluginStructure[lang]) {
-            return this.pluginStructure[lang].docTypes;     
+            var arrDocsByLang = this.pluginStructure[lang].docTypes;
+            if (arrDocsByLang != false) {
+                for (var i = 0; i < arrDocsByLang.length; i++) {
+                    var objName = arrDocsByLang[i].name;
+                    if ("type_" + objName in Locale.strings) {
+                        arrDocsByLang[i].i18n_name = Locale.strings["type_" + objName];
+                    } else {
+                        arrDocsByLang[i].i18n_name = objName;
+                    }
+                }
+            }
+            return arrDocsByLang;
         }
         return false;
     },
-    
+
     getDocTypesName: function() {
         return Ext.Array.map(this.getDocTypesByLang(this.getLanguage()), function(item) {
             return item.name;

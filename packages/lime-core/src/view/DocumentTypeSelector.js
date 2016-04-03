@@ -52,8 +52,8 @@ Ext.define('LIME.view.DocumentTypeSelector', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.docTypeSelector',
     name: 'docType',
-    //valueField: 'code',
-    displayField: 'name',
+    valueField: 'name',
+    displayField: 'i18n_name',
     queryMode: 'local',
     typeAhead: true,
     store: 'DocumentTypes',
@@ -74,4 +74,5 @@ Ext.define('LIME.view.DocumentTypeSelector', {
         this.emptyText = Locale.strings.type;
         this.callParent(arguments);
     }
+
 }); 

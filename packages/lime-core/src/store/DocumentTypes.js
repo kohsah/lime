@@ -50,5 +50,8 @@
  */
 Ext.define('LIME.store.DocumentTypes', {
     extend : 'Ext.data.Store',
-    fields : ['name']
+    /**
+     * i18n_name is the localized name of the document type
+     */
+    fields : ['name', 'i18n_name']
 }); 
