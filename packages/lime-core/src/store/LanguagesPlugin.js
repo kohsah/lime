@@ -67,7 +67,9 @@ Ext.define('LIME.store.LanguagesPlugin', {
      * @private
      */
     lastConfiguration : {
-        docType : null,
+        docType: null,
+        docSubType: null,
+        docEditorType : null,
         docLocale : null,
         loaded : false
     },
@@ -76,7 +78,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
     languagePlugin : {
         languageRoot : new Ext.Template('{lang}/interface'),
         subDirs : {
-            docType : '',
+            docEditorType : '',
             locale : '',
             language : Locale.getLang()
         }
@@ -184,11 +186,13 @@ Ext.define('LIME.store.LanguagesPlugin', {
      * the directory structure. This function is event based and simulate
      * a series of synchronous requests (because order matters!).
      */
-    loadPluginData : function(app, docType, docLocale) {
+    loadPluginData : function(app, docType, docSubType, docEditorType, docLocale) {
+        console.log("LOAD PLUGIN DATA ", app, docType, docSubType, docEditorType, docLocale);
         var me = this;
         /**
          * If the last loaded configuration is the same of the passed configuration
          * all files is already loaded
+         * ASHOK: TODO change the docType equality to docType and docSubType
          */
         if (this.lastConfiguration.markingLanguage == Config.getLanguage() && this.lastConfiguration.loaded && this.lastConfiguration.docType == docType && this.lastConfiguration.docLocale == docLocale) {
             this.fireEvent('filesloaded', this.dataObjects);
@@ -221,6 +225,8 @@ Ext.define('LIME.store.LanguagesPlugin', {
         app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.configurationFiles);
         this.lastConfiguration = {
             docType : docType,
+            docSubType: docSubType,
+            docEditorType: docEditorType,
             docLocale : docLocale,
             loaded : false,
             markingLanguage: Config.getLanguage()
@@ -249,8 +255,8 @@ Ext.define('LIME.store.LanguagesPlugin', {
             var newDir = directoriesList[directory];
             if (directory == "locale") {
                 newDir = docLocale;
-            } else if (directory == "docType") {
-                newDir = docType;
+            } else if (directory == "docEditorType") {
+                newDir = docEditorType;
             }
             currentDirectory += '/' + newDir;
             styleUrls.push({url: currentDirectory+"/"+me.styleFile});

@@ -53,5 +53,5 @@ Ext.define('LIME.store.DocumentTypes', {
     /**
      * i18n_name is the localized name of the document type
      */
-    fields : ['name', 'i18n_name']
+    fields : ['name', 'subName', 'editorType', 'i18n_name']
 }); 

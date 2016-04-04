@@ -437,7 +437,6 @@ Ext.define('LIME.controller.MainToolbar', {
                     typeSelector = cmp.up('window').down('docTypeSelector'),
                     typeStore = this.getStore('DocumentTypes'),
                     types = Config.getDocTypesByLang(value);
-
                     if (types) {
                         typeStore.loadData(types);
                         typeSelector.allowBlank = false;
@@ -516,7 +515,6 @@ Ext.define('LIME.controller.MainToolbar', {
                afterrender: function(cmp) {
                     var newWindow = cmp,
                         config = newWindow.tmpConfig;
-
                     // Setting the first language as default selected
                     newWindow.down("docMarkingLanguageSelector").setValue((Config.languages[0]) ? Config.languages[0].name : "");
 

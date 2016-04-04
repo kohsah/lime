@@ -50,5 +50,5 @@
  */
 Ext.define('FaoLime.DocumentTypeSelector', {
     extend: 'LIME.view.DocumentTypeSelector',
-    value: 'debateReport'
+    value: 'debateReport-dc'
 }); 

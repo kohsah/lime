@@ -65,6 +65,7 @@ Ext.define('LIME.view.modal.NewDocument', {
     modal : true,
 
     width : 200,
+
     
     /**
      * Return the data set in the view
@@ -74,10 +75,18 @@ Ext.define('LIME.view.modal.NewDocument', {
         var form = this.down('form').getForm();
         if (!form.isValid())
             return null;
-        return form.getValues(false, false, false, true);
+        var formData =  form.getValues(false, false, false, true);
+        formData["docEditorType"] = this.editorType;
+        formData["docSubName"] = this.subName;
+        return formData;
     },
 
     initComponent: function() {
+        /** subName and editorType are set in the select event
+         * of the doctype selector combobox
+         */
+        this.subName = "NA";
+        this.editorType = "NA";
         this.title = Locale.strings.newDocument,
         this.items = [{
             // Form to type username and password (including buttons)

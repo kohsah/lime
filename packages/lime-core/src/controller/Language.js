@@ -76,8 +76,9 @@ Ext.define('LIME.controller.Language', {
         config = this.beforeLoadManager(config);
 
         var success = Config.setLanguage(config.docMarkingLanguage);
-        if (!success || !config.docType || !config.docLang || !config.docLocale)
+        if (!success || !config.docType || !config.docLang || !config.docLocale) {
             return this.openNewDocumentWindow(config, !success);
+        }
 
         this.application.fireEvent(Statics.eventsNames.progressStart, null, {
             value:0.1, text: Locale.strings.progressBar.loadingDocument
@@ -101,6 +102,8 @@ Ext.define('LIME.controller.Language', {
         DocProperties.documentInfo.docLocale = config.docLocale;
         DocProperties.documentInfo.originalDocId = config.originalDocId;
         DocProperties.documentInfo.docMarkingLanguage = config.docMarkingLanguage;
+        DocProperties.documentInfo.docSubType = config.docSubName;
+        DocProperties.documentInfo.docEditorType = config.docEditorType;
     },
 
     loadLanguageConf: function(config, callback) {
@@ -111,10 +114,15 @@ Ext.define('LIME.controller.Language', {
         });
         var docType =  Ext.isString(config.alternateDocType) ? config.alternateDocType : config.docType;
         Ext.defer(function() { // TODO: check and remove defer
-            me.getStore('LanguagesPlugin').loadPluginData(me.application, docType, config.docLocale);
+            me.getStore('LanguagesPlugin').loadPluginData(me.application, docType, config.docSubType, config.docEditorType, config.docLocale);
         }, 200, me);
     },
 
+    /**
+     * Callback function for loadLanguageConf
+     * @param config
+     * @param styleUrls
+     */
     performLoad: function(config, styleUrls) {
         var app = this.application;
         app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.loadingDocument);
@@ -125,7 +133,6 @@ Ext.define('LIME.controller.Language', {
         // following the complicated rules in our json configuration files.
         if (config.docText == '<div> &nbsp; </div>')
             config.docText = this.getStore('LanguagesPlugin').buildEmptyDocumentTemplate();
-
         config.docDom = this.getController('Editor').loadDocument(config.docText, styleUrls).ownerDocument;
         app.fireEvent(Statics.eventsNames.afterLoad, config);
         app.fireEvent(Statics.eventsNames.progressEnd);

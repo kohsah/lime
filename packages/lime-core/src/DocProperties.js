@@ -93,6 +93,8 @@ Ext.define('LIME.DocProperties', {
     documentInfoTemplate : {
         nationality : null,
         docType : null,
+        docSubType: null,
+        docEditorType: null,
         docLocale : null,
         date : null,
         number : null,
@@ -129,6 +131,17 @@ Ext.define('LIME.DocProperties', {
     getDocType : function() {
         return this.documentInfo.docType;
     },
+
+
+    getLangDocType: function() {
+        return this.documentInfo.langDocType;
+    },
+
+    getLangSubType: function() {
+        return this.documentInfo.langSubType;
+    },
+
+
 
     /**
      * Return the correct document's class based

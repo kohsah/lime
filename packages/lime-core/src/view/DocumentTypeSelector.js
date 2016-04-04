@@ -66,6 +66,11 @@ Ext.define('LIME.view.DocumentTypeSelector', {
         },
         beforedestroy: function(cmp){
             cmp.hideAction(cmp);
+        },
+        select: function(cmp, record) {
+            var wnd = cmp.up("window");
+            wnd.editorType = record.data["editorType"];
+            wnd.subName  =record.data["subName"];
         }
     },
     allowBlank: false,
