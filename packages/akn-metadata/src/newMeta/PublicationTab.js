@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 - Copyright holders CIRSFID and Department of
+ * Copyright (c) 2016 - Copyright holders CIRSFID and Department of
  * Computer Science and Engineering of the University of Bologna
  *
  * Authors:
@@ -44,32 +44,27 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// This store lists the languages a document can be written in and
-// their ISO 639-2 alpha-3 code.
-Ext.define('LIME.store.DocumentLanguages', {
-    extend : 'Ext.data.Store',
-    autoLoad: true,
-    fields : [
-        'code',
-        'name'
+Ext.define('AknMetadata.newMeta.PublicationTab', {
+    extend: 'AknMetadata.newMeta.EditorTab',
+    xtype: 'akn-metadata-tab-publication',
+    requires: [
+        'AknMetadata.newMeta.EditorTab',
+        'AknMetadata.newMeta.EditorTable'
     ],
+    title: Locale.getString('publication', 'akn-metadata'),
+    glyph: 'xf1ea@FontAwesome',
 
-    proxy : {
-        type : 'ajax',
-        url : 'config/locale/languages.json',
-        reader : {
-            type : 'json',
-            rootProperty : 'languages'
-        }
-    },
-
-    listeners: {
-        // Replace names with the translated ones
-        load: function(store, records) {
-            records.forEach(function(r) {
-                var translatedName = Locale.getString('languages')[r.get('code')];
-                if (translatedName) r.set('name', translatedName);
-            });
-        }
-    }
+    items: [{
+        xtype: 'datefield',
+        fieldLabel: Locale.getString('date', 'akn-metadata'),
+        bind: '{document.pubblicationDate}'
+    },{
+        xtype: 'textfield',
+        fieldLabel: Locale.getString('name'),
+        bind: '{document.pubblicationName}'
+    },{
+        xtype: 'textfield',
+        fieldLabel: Locale.getString('number', 'akn-metadata'),
+        bind: '{document.pubblicationNumber}'
+    }]
 });

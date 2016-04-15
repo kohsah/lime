@@ -107,75 +107,17 @@ Ext.define('LIME.store.LanguagesPlugin', {
         }]
     },
 
-    /* Initially empty, loaded dinamically */
     dataObjects : {},
 
-    /**
-     * Loader for requests events.
-     * WARNING: ensure that the scope of this function is "this" (the controller that implements it)
-     * @private
-     */
-    requestLoader : function(id, reqUrls) {
-        var app = this.app;
-        this.load({
-            url : reqUrls[id].url,
-            scope : this,
-            callback : function(records, operation, success) {
-                var evtPrefix = 'makeRequest';
-                console.info(records, operation, success);
-                if (success && (operation.response.responseText != "")) {
-                    var fileName = reqUrls[id].name,
-                        level = reqUrls[id].level;
-                    if (fileName == "viewConfigs") {
-                        //Just replace the content don't merge as others
-                        this.dataObjects[fileName] = records[0].raw;
-                    } else {
-                        if (!this.dataObjects[level]) {
-                            this.dataObjects[level] = {};
-                        }
-                        this.dataObjects[level][fileName] = Utilities.mergeJson(this.dataObjects[level][fileName], records[0].raw, Utilities.beforeMerge);
-                        if (fileName != 'markupMenu') {
-                            this.dataObjects[fileName] = Utilities.mergeJson(this.dataObjects[fileName], records[0].raw, Utilities.beforeMerge);
-                        }
-                    }
-                }
-                if (id == reqUrls.length - 1) {
-                    /* Fire the event only if this is the last url to scan */
-                    this.fireEvent('filesloaded', this.dataObjects);
-                    this.lastConfiguration.loaded = true;
-                } else {
-                    /* Either the call was successful or not fire the next request */
-                    var eventName = evtPrefix + (id + 1);
-                    this.fireEvent(eventName, id + 1, reqUrls);
-                }
-                app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.configurationFiles);
-                // this.removeListener(evtPrefix+id, this.requestLoader, this);
-            }
-        });
-    },
-
-    requestSyncLoader: function(reqObjects) {
+    requestSyncLoader: function(callback, reqObjects) {
         var me = this, app = this.app;
         Ext.each(reqObjects, function(obj) {
-            var fileName = obj.name,
-                level = obj.level;
-            if (fileName == "viewConfigs") {
-                //Just replace the content don't merge as others
-                me.dataObjects[fileName] = obj.content;
-            } else {
-                if (!me.dataObjects[level]) {
-                    me.dataObjects[level] = {};
-                }
-                me.dataObjects[level][fileName] = Utilities.mergeJson(me.dataObjects[level][fileName], obj.content, Utilities.beforeMerge);
-                if (fileName != 'markupMenu') {
-                    me.dataObjects[fileName] = Utilities.mergeJson(me.dataObjects[fileName], obj.content, Utilities.beforeMerge);
-                }
-            }
+            me.dataObjects[obj.name] = Utilities.mergeJson(me.dataObjects[obj.name], obj.content, Utilities.beforeMerge);
         });
 
-        me.fireEvent('filesloaded', me.dataObjects, me.styleUrls.map(function(el) {return el.url;}));
         me.lastConfiguration.loaded = true;
         app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.configurationFiles);
+        callback(me.dataObjects, me.styleUrls.map(function(el) {return el.url;}));
     },
 
     /**
@@ -186,17 +128,17 @@ Ext.define('LIME.store.LanguagesPlugin', {
      * the directory structure. This function is event based and simulate
      * a series of synchronous requests (because order matters!).
      */
-    loadPluginData : function(app, docType, docSubType, docEditorType, docLocale) {
-        console.log("LOAD PLUGIN DATA ", app, docType, docSubType, docEditorType, docLocale);
+    loadPluginData : function(app, docType, docLocale, callback) {
         var me = this;
         /**
          * If the last loaded configuration is the same of the passed configuration
          * all files is already loaded
          * ASHOK: TODO change the docType equality to docType and docSubType
          */
-        if (this.lastConfiguration.markingLanguage == Config.getLanguage() && this.lastConfiguration.loaded && this.lastConfiguration.docType == docType && this.lastConfiguration.docLocale == docLocale) {
-            this.fireEvent('filesloaded', this.dataObjects);
-            return;
+        if (this.lastConfiguration.markingLanguage == Config.getLanguage()
+            && this.lastConfiguration.loaded && this.lastConfiguration.docType == docType
+            && this.lastConfiguration.docLocale == docLocale) {
+            return callback(this.dataObjects);
         }
 
         /* For each directory retrieve all the needed json files starting from the languageRoot */
@@ -273,22 +215,14 @@ Ext.define('LIME.store.LanguagesPlugin', {
             }
         }
         me.reqUrls = reqUrls;
-        Server.filterUrls(styleUrls, false, me.setStyleAndRequestFiles, me.setStyleAndRequestFiles, me);
+        Server.filterUrls(styleUrls, false, me.setStyleAndRequestFiles.bind(me, callback), me.setStyleAndRequestFiles.bind(me, callback), me);
     },
 
-    setStyleAndRequestFiles: function(styleUrls) {
-        var me = this;
-        me.styleUrls = styleUrls;
-        Server.filterUrls(me.reqUrls, true, me.requestSyncLoader, function(reqUrls) {
-            for (objIndex in reqUrls) {
-                /* Add a lister that waits for the given key file to be loaded */
-                var eventName = 'makeRequest' + objIndex;
-                me.addListener(eventName, me.requestLoader, me);
-            }
-
-            /* Start the requests from the first file */
-            me.fireEvent('makeRequest0', 0, reqUrls);
-        }, me);
+    setStyleAndRequestFiles: function(callback, styleUrls) {
+        this.styleUrls = styleUrls;
+        Server.filterUrls(this.reqUrls, true, 
+                this.requestSyncLoader.bind(this, callback), 
+                this.requestSyncLoader.bind(this, callback), this);
     },
 
     // Get the new empty document template for the current configuration.
