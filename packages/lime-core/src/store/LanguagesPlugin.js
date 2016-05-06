@@ -68,6 +68,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
      */
     lastConfiguration : {
         docType : null,
+        docEditorType: null,
         docLocale : null,
         loaded : false
     },
@@ -76,7 +77,8 @@ Ext.define('LIME.store.LanguagesPlugin', {
     languagePlugin : {
         languageRoot : new Ext.Template('{lang}/interface'),
         subDirs : {
-            docType : '',
+            docType: '',
+            docEditorType : '',
             locale : '',
             language : Locale.getLang()
         }
@@ -115,7 +117,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
 
         me.lastConfiguration.loaded = true;
         app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.configurationFiles);
-        callback(me.dataObjects, me.styleUrls.map(function(el) {return el.url;}));
+        callback(me.dataObjects, me.styleUrls.map(function(el) {console.log(" XXX YYY callback inner el.url", el.url); return el.url;}));
     },
 
     /**
@@ -126,8 +128,9 @@ Ext.define('LIME.store.LanguagesPlugin', {
      * the directory structure. This function is event based and simulate
      * a series of synchronous requests (because order matters!).
      */
-    loadPluginData : function(app, docType, docLocale, callback) {
+    loadPluginData : function(app, docType, editorType, docLocale, callback) {
         var me = this;
+        console.log(" XXX YYYY loadPluginData", docType, editorType, docLocale);
         /**
          * If the last loaded configuration is the same of the passed configuration
          * all files is already loaded
@@ -135,6 +138,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
         if (this.lastConfiguration.markingLanguage == Config.getLanguage()
             && this.lastConfiguration.loaded && this.lastConfiguration.docType == docType
             && this.lastConfiguration.docLocale == docLocale) {
+            console.log(" XXX YYY loadPluginData callback dataObjects", this.dataObjects);
             return callback(this.dataObjects);
         }
 
@@ -142,6 +146,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
         var languagesPlugins = this;
         var directoriesList = this.languagePlugin.subDirs;
         var directoriesListDefault = Ext.clone(this.languagePluginDefault);
+        console.log(" XXX YYY directoriesList, directoriesListDefault ", directoriesList, directoriesListDefault);
         directoriesListDefault.languageRoot = directoriesListDefault.languageRoot.apply({lang: Config.getLanguage()});
         var currentDirectory = this.baseDirectories['plugins']+'/'+this.languagePlugin.languageRoot.apply({lang: Config.getLanguage()});
         var currentDirectoryDefault = this.baseDirectories['plugins'];
@@ -157,6 +162,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
                 url : reqUrl,
                 level: 'global'
             };
+            console.log(" XXX YYY loadPluginData ", reqObject);
             reqUrls.push(reqObject);
         }
         this.app = app;
@@ -164,6 +170,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
         app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.configurationFiles);
         this.lastConfiguration = {
             docType : docType,
+            docEditorType: editorType,
             docLocale : docLocale,
             loaded : false,
             markingLanguage: Config.getLanguage()
@@ -175,7 +182,9 @@ Ext.define('LIME.store.LanguagesPlugin', {
             var newDir = directoriesListDefault[directory];
             currentDirectoryDefault += '/' + newDir;
             styleUrls.push({url: currentDirectoryDefault+"/"+me.styleFile});
+            console.log(" XXX YYY styleUrls ", styleUrls);
             for (var files in pluginsFiles) {
+                console.log(" XXX YYY files->pluginsFiles ", files);
                 for (var file in pluginsFiles[files]) {
                     var reqUrl = currentDirectoryDefault + '/' + pluginsFiles[files][file];
                     var reqObject = {
@@ -183,6 +192,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
                         url : reqUrl,
                         level: 'defaults'
                     };
+                    console.log(" XXX YYY files->pluginsFiles[files] ", reqObject);
                     reqUrls.push(reqObject);
                 }
             }
@@ -190,13 +200,17 @@ Ext.define('LIME.store.LanguagesPlugin', {
 
         for (var directory in directoriesList) {
             var newDir = directoriesList[directory];
+            console.log(" XXX YYY directoriesList - newDir ", newDir);
             if (directory == "locale") {
                 newDir = docLocale;
+            } else if (directory == "docEditorType") {
+                newDir = editorType;
             } else if (directory == "docType") {
                 newDir = docType;
             }
             currentDirectory += '/' + newDir;
             styleUrls.push({url: currentDirectory+"/"+me.styleFile});
+            console.log(" XXX YYY styleUrls currentDirectory ", styleUrls);
             for (var files in pluginsFiles) {
                 for (var file in pluginsFiles[files]) {
                     var reqUrl = currentDirectory + '/' + pluginsFiles[files][file];
@@ -205,6 +219,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
                         url : reqUrl,
                         level: directory
                     };
+                    console.log(" XXX YYY styleUrls reqObject 216 ", reqObject);
                     reqUrls.push(reqObject);
                 }
             }
@@ -225,6 +240,7 @@ Ext.define('LIME.store.LanguagesPlugin', {
     // everything will be a div, etc.
     buildEmptyDocumentTemplate: function () {
         var dataObjects = this.getConfigData();
+        console.log(" XXX YYY buildEmptyDocumentTemplate ", dataObjects);
         var template = '';
 
         function addTag (el) {

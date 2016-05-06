@@ -149,6 +149,7 @@ Ext.define('LIME.Interpreters', {
      */
     getButtonConfig : function(name) {
         //Get plugin configuration from store
+        console.log(" XXX YYY getButtonConfig ", name, pluginData.markupMenu[name]);
         var pluginData = Ext.getStore('LanguagesPlugin').getConfigData(),
         //  If the button doesn't exist there must be some error in the configuration
         button = pluginData.markupMenu[name],

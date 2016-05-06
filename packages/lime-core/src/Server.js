@@ -184,7 +184,7 @@ Ext.define('LIME.Server', {
     saveDocument: function (path, content, success, failure) {
         var username = User.username,
             password = User.password;
-
+        console.log(" XXX YYY saveDocument ", username, password, content, path);
         this.authRequest({
             method: 'PUT',
             rawData: content,

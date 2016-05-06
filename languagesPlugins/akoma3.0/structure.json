@@ -3,6 +3,30 @@
     "formulaName": "formulaIniziale",
 	"docTypes": [
 		{
+			"name": "debateReport",
+			"editorType": "dc",
+			"label": {
+				"en": "DC Document"
+			},
+			"locales": [
+				{
+					"name": "fao"
+				}
+			]
+		},
+        {
+			"name": "debateReport",
+			"editorType": "rep",
+			"label": {
+				"en": "REP"
+			},
+			"locales": [
+				{
+					"name": "fao"
+				}
+			]
+		},
+		{
 			"name": "bill",
 			"locales": [
 				{

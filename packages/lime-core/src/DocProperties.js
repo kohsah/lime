@@ -99,6 +99,7 @@ Ext.define('LIME.DocProperties', {
         docName : null,
         docLang : null,
         docMarkingLanguage: null,
+        docEditorType: null,
         folder: null
     },
 
@@ -122,6 +123,14 @@ Ext.define('LIME.DocProperties', {
     getDocType : function() {
         return this.documentInfo.docType;
     },
+
+
+    getEditorType : function() {
+        return this.documentInfo.docEditorType;
+    },
+
+
+
 
     /**
      * Return the correct document's class based

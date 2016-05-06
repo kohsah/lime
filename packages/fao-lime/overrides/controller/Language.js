@@ -52,7 +52,7 @@
  */
 // TODO: rename this to Document
 Ext.define('FaoLime.Language', {
-    override : 'LIME.controller.Language',
+    //override : 'LIME.controller.Language',
 
     setDocProperties: function(config) {
         this.callParent(arguments);

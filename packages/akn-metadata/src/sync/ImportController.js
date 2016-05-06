@@ -64,13 +64,16 @@ Ext.define('AknMetadata.sync.ImportController', {
     // On the loadDocument event, load metadata from the original xml document.
     // No HtmlToso, no XSLTs, just plain and simple AkomaNtoso. KISS. <3
     onLoadDocument: function (config) {
+        console.log(" XXX YYY onLoadDocument config ", Ext.clone(config));
         var metaNodes = this.getMetadataNodes(config);
+        console.log(" XXX YYY onLoadDocument metaNodes ", Ext.clone(metaNodes));
         if (!metaNodes.length) return;
 
         var metadata = Ext.getStore('metadata');
         metadata.removeAll();
         try {
             metaNodes.forEach(function(meta) {
+                console.log(" XXX YYY onLoadDocument forEach meta = ", Ext.clone(meta));
                 var doc = AknMain.xml.Document.newDocument(meta, 'akn');
                 this.importDocumentMeta(doc, metadata.newDocument());
             }, this);
@@ -97,6 +100,7 @@ Ext.define('AknMetadata.sync.ImportController', {
     },
 
     importDocumentMeta: function(akn, store) {
+        console.log(" XXX YYY importDocumentMeta akn ", akn);
         var expUri = akn.getValue('.//akn:FRBRExpression/akn:FRBRuri/@value'),
             uri = expUri ? AknMain.Uri.parse(expUri) : AknMain.Uri.empty();
 
@@ -249,6 +253,7 @@ Ext.define('AknMetadata.sync.ImportController', {
         }
 
         function importWork() {
+            console.log(" XXX YYY importWork uri  = ", uri);
             var date = new Date(akn.getValue('.//akn:FRBRWork/akn:FRBRdate/@date') || uri.date);
             date = (Utilities.isValidDate(date)) ? date : new Date();
             store.set('date', date);
@@ -301,13 +306,19 @@ Ext.define('AknMetadata.sync.ImportController', {
     },
 
     generateMetaXml: function(config) {
-        var metaTpl = new Ext.Template([
+        var metaTpl = new Ext.XTemplate([
             '<akomaNtoso xmlns="akn">',
                 '<{docType}>',
                     '<meta>',
                         '<identification>',
                             '<FRBRWork>',
                                 '<FRBRcountry value="{docLocale}"/>',
+                                '<tpl if="docEditorType">',
+                                    '<FRBRsubtype value="{docEditorType}" />',
+                                '</tpl>',
+                                '<tpl if="number">',
+                                    '<FRBRnumber value="{number}" showAs="{number}" />',
+                                '</tpl>',
                             '</FRBRWork>',
                             '<FRBRExpression>',
                                 '<FRBRlanguage language="{docLang}"/>',
@@ -317,6 +328,8 @@ Ext.define('AknMetadata.sync.ImportController', {
                 '</{docType}>',
             '</akomaNtoso>'
         ]);
+        console.log(" XXX YYY generateMetaXML config = ", Ext.clone(config));
+        console.log(" XXX YYY generateMetaXML return value = ", (config.docType && config.docLocale && config.docLang) ? metaTpl.apply(config) : ""    );
         return (config.docType && config.docLocale && config.docLang) ? metaTpl.apply(config) : "";
     }
 });

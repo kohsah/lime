@@ -71,6 +71,7 @@ Ext.define('LIME.controller.Language', {
     },
 
     loadDocument: function(config) {
+        console.log(" XXX YYY (core.LANUAGE) loadDocument config", config);
         config.docMarkingLanguage = config.docMarkingLanguage || 
                                     Config.languages.length == 1 && Config.languages[0].name;
         config = this.beforeLoadManager(config);
@@ -94,9 +95,11 @@ Ext.define('LIME.controller.Language', {
     },
 
     setDocProperties: function(config) {
+        console.log(" XXX YYY setDocProperties ", config);
         DocProperties.removeAll();
         DocProperties.setDocId(config.docId || User.getDefaultFilePath());
         DocProperties.documentInfo.docType = config.docType;
+        DocProperties.documentInfo.docEditorType = config.docEditorType;
         DocProperties.documentInfo.docLang = config.docLang;
         DocProperties.documentInfo.docLocale = config.docLocale;
         DocProperties.documentInfo.originalDocId = config.originalDocId;
@@ -105,18 +108,23 @@ Ext.define('LIME.controller.Language', {
 
     loadLanguageConf: function(config, callback) {
         var me = this,
-            docType = Ext.isString(config.alternateDocType) ? config.alternateDocType : config.docType;
+            docType = Ext.isString(config.alternateDocType) ? config.alternateDocType : config.docType,
+            docEditorType = config.docEditorType;
+
+        console.log(" XXX YYY loadLanguageConf config = ", config);
 
         var langLoaded = function(data, styleUrls) {
+            console.log(" XXX YYY langLoaded callback = data, styleUrls ", data, styleUrls);
             me.application.fireEvent(Statics.eventsNames.languageLoaded, data);
             callback(config, styleUrls);
         }
 
         me.getStore('LanguagesPlugin')
-            .loadPluginData(me.application, docType, config.docLocale, langLoaded);
+            .loadPluginData(me.application, docType, docEditorType, config.docLocale, langLoaded);
     },
 
     performLoad: function(config, styleUrls) {
+        console.log(" XXX YYY performLoad ", Ext.clone(config), styleUrls);
         var app = this.application;
         app.fireEvent(Statics.eventsNames.progressUpdate, Locale.strings.progressBar.loadingDocument);
         // Clear previous undo levels
@@ -124,10 +132,12 @@ Ext.define('LIME.controller.Language', {
 
         // If the document loaded is empty, use the template
         // following the complicated rules in our json configuration files.
-        if (config.docText == '<div> &nbsp; </div>')
+        if (config.docText == '<div> &nbsp; </div>') {
             config.docText = this.getStore('LanguagesPlugin').buildEmptyDocumentTemplate();
+        }
 
         config.docDom = this.getController('Editor').loadDocument(config.docText, styleUrls).ownerDocument;
+        console.log(" XXX YYY performLoad docDom : ", Ext.clone(config.docDom));
         app.fireEvent(Statics.eventsNames.afterLoad, config);
         app.fireEvent(Statics.eventsNames.progressEnd);
     },
@@ -135,7 +145,8 @@ Ext.define('LIME.controller.Language', {
     processTranslateRequest: function(callback, config, cmp, metaNode) {
         var me = this,
             html = me.getHtmlToTranslate();
-
+        console.log(" XXX YYY processTranslateRequest config, metaNode ", config, metaNode);
+        console.log(" XXX YYY processTranslateRequest html ", html);
         me.translateContent(html, function(responseText) {
             // pretty print the code because codemirror is not enough
             var xmlPretty = vkbeautify.xml(responseText);
@@ -153,8 +164,10 @@ Ext.define('LIME.controller.Language', {
     },
 
     getHtmlToTranslate: function(config, cmp, metaNode) {
+        console.log(" XXX YYY getHtmlToTranslate config cmp metaNode ", config, cmp, metaNode);
+        console.log(" XXX YYY KEY HERE !");
         var newConfig = this.beforeTranslate(config, cmp) || config;
-
+        console.log(" XXX YYY gethtmlToTranslate newConfig ", Ext.clone(newConfig));
         return this.prepareToTranslate(newConfig, metaNode);
     },
 
@@ -174,6 +187,7 @@ Ext.define('LIME.controller.Language', {
             focusedElements  = tmpElement.querySelectorAll("."+DocProperties.elementFocusedCls);
 
         me.aknIdMapping = {};
+        console.log(" XXX YYY prepateToTranslate params, tmpElement, metaNode ", params, tmpElement, metaNode);
         me.appendMetadata(tmpElement, metaNode);
 
         var wrappingElements = [];
@@ -243,13 +257,13 @@ Ext.define('LIME.controller.Language', {
         //removing all ext generated ids
         editorContent = editorController.getContent(false, cmp).replace(/id="ext-element-(\d)+"/g, "")
                         .replace(/(class=\"[^\"]+)(\s+\bfocused\")/g, '$1"');
-
+        console.log("XXX YYY beforeTranslate editorContent ", editorContent);
         // creating a div that contains the editor content
         var tmpElement = Ext.DomHelper.createDom({
             tag : 'div',
             html : editorContent
         });
-
+        console.log(" XXX YYY beforeTranslate (orig) tmpElement ", Ext.clone(tmpElement));
         return {
             docDom: tmpElement
         };

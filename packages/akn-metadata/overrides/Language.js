@@ -65,7 +65,7 @@
         if (!store) return;
         var metaStr = AknMain.metadata.HtmlSerializer.serialize(store),
             doc = AknMain.xml.Document.parse(metaStr);
-
+        console.log(" XXX YYY overwriteMetadata metaStr = ", Ext.clone(metaNode), metaStr);
         var lastInsertedNode = undefined;
         doc.select('//*[@class="meta"]/*').forEach(function(node) {
             node = metaNode.ownerDocument.adoptNode(node);

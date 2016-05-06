@@ -79,8 +79,10 @@ Ext.define('AknMain.Language', {
 
     beforeLoad: function(params) {
         var metaResults = [];
+        console.log(" XXX YYY beforeLoad params = ", params);
         if (params.docDom) {
             var documents = params.docDom.querySelectorAll('*[class~=' + DocProperties.documentBaseClass + ']');
+            //console.log(" XXX YYY beforeLoad ", documents);
             if(documents.length) {
                 Ext.each(documents, function(doc, index) {
                     metaResults.push(Ext.Object.merge(this.processMeta(doc, params), {docDom: doc}));
@@ -94,6 +96,7 @@ Ext.define('AknMain.Language', {
             // metaResults contains properties founded in the document
             metaResults[0].docLang = metaResults[0].docLang || params.docLang;
             metaResults[0].docLocale = metaResults[0].docLocale || params.docLocale;
+            console.log(" XXX YYY metaResults ", metaResults[0].docType, params.docType);
             metaResults[0].docType = metaResults[0].docType || params.docType;
             params.docLang = metaResults[0].docLang;
             params.docLocale = metaResults[0].docLocale;
@@ -159,7 +162,7 @@ Ext.define('AknMain.Language', {
                 node.setAttribute('style', 'text-align: '+align+';');
             }
         });
-
+        console.log(" XXX YYY afterLoad, docDom : ", Ext.clone(params));
         // Add proprietary namespace for the given locale if it is missing
         if(DocProperties.documentInfo.docLocale == 'uy') {
             var el = params.docDom.querySelector('.document');
@@ -175,6 +178,7 @@ Ext.define('AknMain.Language', {
 
     beforeTranslate : function(config) {
         var params = this.callParent(arguments);
+        console.log(" XXX YYY override - beforeTranslate params = ", Ext.clone(params));
         var dom = params.docDom;
         Ext.each(dom.querySelectorAll('[style]'), function(node) {
             var align = node.getAttribute('style').match(/text-align:\s*(\w+);/);
@@ -186,9 +190,11 @@ Ext.define('AknMain.Language', {
         Ext.each(dom.querySelectorAll('.formula'), function(node) {
             if (  !node.getAttribute(nameAttr)  ) {
                 var type = Config.getLanguageConfig().formulaName || "" ;
+                console.log(" XXX YYY beforeTranslate (loop) ", node, nameAttr, type);
                 node.setAttribute(nameAttr, type);
             }
         });
+        console.log(" XXX YYY override - beforeTranslate params = return ", params);
         return params;
     },
 
@@ -198,6 +204,7 @@ Ext.define('AknMain.Language', {
             includeFiles : Config.getLocaleXslPath()
         };
         var xslt = Config.getLanguageTransformationFile("LIMEtoLanguage");
+        console.log(" XXX YYY translateContent ", html, success.toString());
         Server.applyXslt(html, xslt, success, failure, config);
     },
 

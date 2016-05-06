@@ -77,6 +77,7 @@ Ext.define('AknMain.metadata.Store', {
 
     // Create and return a new Document metadata record
     newDocument: function() {
+        console.log(" XXX YYY newDocument called from " , arguments.callee.caller.toString());
         return this.add({})[0];
     }
 });

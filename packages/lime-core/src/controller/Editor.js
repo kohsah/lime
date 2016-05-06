@@ -818,6 +818,7 @@ Ext.define('LIME.controller.Editor', {
      * @param {String} formatType Specify the format of the output (html, raw, text etc.)
      */
     getContent: function(formatType, cmp) {
+        console.log(" XXX YYY getContent formatType, cmp ", formatType, cmp);
         if (!formatType)
             formatType = "html";
         return this.getEditor(cmp).getContent({
@@ -870,6 +871,7 @@ Ext.define('LIME.controller.Editor', {
     },
 
     loadDocument: function(docText, styleUrls, cmp) {
+        console.log(" XXX YYY Editor.loadDocument ", docText, styleUrls, cmp);
         var body = this.setContent(docText, cmp);
         this.addStyles(styleUrls);
         this.setPath(this.getBody());

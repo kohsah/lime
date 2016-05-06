@@ -193,6 +193,7 @@ Ext.define('AknAnonym.Controller', {
     },
 
     loadDocument: function(content, docMarkingLanguage, docLang, originalXml) {
+        console.log(" XXX YYY loadDocument (Controller) ");
         content = DomUtils.normalizeBr(content);
         // Upload the editor's content
         Ext.GlobalEvents.fireEvent(Statics.eventsNames.loadDocument, {

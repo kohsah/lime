@@ -87,6 +87,7 @@ Ext.define('AknPdfFop.PdfFopMainTab', {
     },
 
     initComponent : function() {
+        console.log(" XXX YYY PDF FOP MAINTAB");
         this.plugins = [{
             ptype : 'iframe',
             pluginId : 'pdfplugin'

@@ -66,6 +66,8 @@ Ext.define('AknMain.metadata.HtmlSerializer', {
         '           <div class="FRBRdate" date="{date}" name=""/>',
         '           <div class="FRBRauthor" href="#{workAuthor}" as="#{workAuthorRole}"/>',
         '           <div class="FRBRcountry" value="{country}"/>',
+        '           <div class="FRBRsubtype" value="{subtype}"/>',
+        '           <div class="FRBRnumber" value="{number}"/>',
         '       </div>',
         '       <div class="FRBRExpression">',
         '          <div class="FRBRthis" value="{uri.expression}"/>',
@@ -157,6 +159,7 @@ Ext.define('AknMain.metadata.HtmlSerializer', {
 
     constructor: function () {
         this.applyTemplate = function (data) {
+            //console.log(" XXX YYY HTML Serializer template apply data = ", data);
             return this.template.apply(data);
         };
         // Add the template utility functions to the modification template
@@ -166,6 +169,9 @@ Ext.define('AknMain.metadata.HtmlSerializer', {
     },
 
     serialize: function (model) {
+        console.log(" XXX YYY serialize model = ", model );
+        //console.log(" XXX YYY serialize model called from ", arguments.callee.caller.toString());
+
         function mapData(store) {
             var res = [];
             store.each(function (d) { res.push(d.getData()); });
@@ -209,6 +215,9 @@ Ext.define('AknMain.metadata.HtmlSerializer', {
         }
 
         var data = model.getData();
+        console.log(" XXX YYY serialize model getData() ", Ext.clone(model), Ext.clone(data));
+        //data.subtype = DocProperties.documentInfo.docEditorType;
+        //data.number = "CL 153";
         data.date = AknMain.metadata.XmlSerializer.normalizeDate(data.date);
         data.version = AknMain.metadata.XmlSerializer.normalizeDate(data.version);
         data.pubblicationDate = AknMain.metadata.XmlSerializer.normalizeDate(data.pubblicationDate);
@@ -220,6 +229,7 @@ Ext.define('AknMain.metadata.HtmlSerializer', {
         data.classificationKeywords = mapData(model.classificationKeywords());
         data.modifications = mapModifications(model.modifications());
         var uri = model.getUri();
+        console.log(" XXX YYY saveDocument uri = ", Ext.clone(uri), Ext.clone(data));
         data.uri = {
             work: uri.work(),
             workUri: uri.work(true),

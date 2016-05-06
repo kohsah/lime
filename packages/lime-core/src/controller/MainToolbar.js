@@ -130,9 +130,10 @@ Ext.define('LIME.controller.MainToolbar', {
      */
     createNewDocument : function(params){
        var config = {
-               docText: '<div> &nbsp; </div>'
+               docText: '<div> &XXX YYY hello world </div>'
            };
        // Load an empty document with empty id
+        console.log(" XXX YYY createNewDocument params ", params);
        Ext.GlobalEvents.fireEvent(Statics.eventsNames.loadDocument, Ext.Object.merge(config, params));
     },
 
@@ -500,6 +501,8 @@ Ext.define('LIME.controller.MainToolbar', {
                         newWindow.tmpConfig = {};
                         DocProperties.clearMetadata(this.application);
                     }
+                    console.log(" XXX YYY mainToolbar before new document tmpConfig, getData ",
+                        newWindow.tmpConfig, newWindow.getData());
                     data = Ext.Object.merge(newWindow.tmpConfig, newWindow.getData());
                     this.createNewDocument(data);
                     newWindow.autoClosed = true;

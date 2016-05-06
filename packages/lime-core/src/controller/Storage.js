@@ -223,6 +223,7 @@ Ext.define('LIME.controller.Storage', {
                 if(Ext.isFunction(openNoEffectCallback)) {
                     Ext.callback(openNoEffectCallback, me, [config]);
                 } else {
+                    console.log(" XXX YYY loadDocument event from openDocument ", config);
                     Ext.GlobalEvents.fireEvent(Statics.eventsNames.loadDocument, config);
                     User.setPreference('lastOpened', filePath);
                 }
@@ -422,7 +423,7 @@ Ext.define('LIME.controller.Storage', {
                 values[this.storageColumns[index].fieldName] = (selectedData.originalName) ? selectedData.originalName : selectedData.name;
             }
         }, this);
-
+        console.log(" XXX YYY prepareSaveDocument value = ", values);
         this.updateDocProperties(values);
         this.saveDocument(function () {
             relatedWindow.close();
@@ -440,7 +441,8 @@ Ext.define('LIME.controller.Storage', {
     updateDocProperties: function(values) {
         var meta = Ext.getStore('metadata').getMainDocument(),
             separatorPos = values.version.indexOf("@");
-
+        console.log(" updateDocProperties value = ", values);
+        console.log(" updateDocproperties meta = ", Ext.clone(meta));
         var versionDate = (separatorPos != -1) ? values.version.substring(separatorPos+1) : '';
 
         var docDate = new Date(values.date);
@@ -459,19 +461,23 @@ Ext.define('LIME.controller.Storage', {
         if (values.number) {
             meta.set('name', values.number);   
         }
+
+        console.log(" updateDocproperties meta (updated) = ", Ext.clone(meta));
     },
 
     // Save the currenly opened document and call callback on success.
     // Fire beforeSave and afterSave events.
     saveDocument: function(callback, path) {
+       console.log( " XXX YYY saveDocument caller is " + arguments.callee.caller.toString());
         var me = this;
         // Before saving
         me.application.fireEvent(Statics.eventsNames.beforeSave, {
             editorDom: me.getController('Editor').getDom(),
             documentInfo: DocProperties.documentInfo
         });
-
+        console.log(" XXX YYY saveDocument documentInfo ", Ext.clone(DocProperties.documentInfo));
         path = path || DocProperties.documentInfo.docId;
+        console.log(" XXX YYY saveDocument path ", path);
         me.application.fireEvent(Statics.eventsNames.translateRequest, function(xml, idMapping, html) {
             Server.saveDocument(path, xml, function () {
                 DocProperties.setDocId(path);
@@ -636,7 +642,7 @@ Ext.define('LIME.controller.Storage', {
         me.application.on(Statics.eventsNames.selectDocument, this.selectDocument, this);
         me.application.on(Statics.eventsNames.openDocument, this.openDocumentByUri, this);
         me.application.on(Statics.eventsNames.saveDocument, function () {
-            console.info('Statics.eventsNames.saveDocument', argumets);
+            console.info('Statics.eventsNames.saveDocument', arguments);
         }, this);
 
         // set up the control

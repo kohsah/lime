@@ -48,7 +48,7 @@
  * Marked document proprieties
  */
 Ext.define('FaoLime.DocProperties', {
-    override: "LIME.DocProperties",
+    //override: "LIME.DocProperties",
 
     documentInfoTemplate : {
         nationality : null,

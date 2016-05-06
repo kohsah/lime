@@ -121,7 +121,8 @@ Ext.define('LIME.Application', {
         'DocumentTypes',
         'DocumentLanguages',
         'MarkupLanguages',
-        'OpenedDocuments'
+        'OpenedDocuments',
+        'CouncilSessions'
     ],
 
     launch : function() {

@@ -65,6 +65,7 @@ Ext.define('AknMain.xml.Document', {
 
     newDocument: function (dom, ns) {
         var me = this;
+        console.log(" XXX YYY newDocument dom = " , Ext.clone(dom), ns);
         var document = dom.ownerDocument || dom;
         var dom = dom.ownerDocument == null ? dom.documentElement : dom;
 
